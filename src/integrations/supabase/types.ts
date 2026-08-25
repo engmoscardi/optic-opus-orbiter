@@ -14,16 +14,153 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      obra_etapas: {
+        Row: {
+          data_conclusao: string | null
+          id: string
+          nome: string
+          obra_id: string
+          observacao: string | null
+          ordem: number
+          responsavel: string | null
+          status: Database["public"]["Enums"]["etapa_status"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          data_conclusao?: string | null
+          id?: string
+          nome: string
+          obra_id: string
+          observacao?: string | null
+          ordem: number
+          responsavel?: string | null
+          status?: Database["public"]["Enums"]["etapa_status"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          data_conclusao?: string | null
+          id?: string
+          nome?: string
+          obra_id?: string
+          observacao?: string | null
+          ordem?: number
+          responsavel?: string | null
+          status?: Database["public"]["Enums"]["etapa_status"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "obra_etapas_obra_id_fkey"
+            columns: ["obra_id"]
+            isOneToOne: false
+            referencedRelation: "obras"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      obras: {
+        Row: {
+          cidade: string | null
+          codigo: string
+          created_at: string
+          created_by: string | null
+          extensao_km: number | null
+          id: string
+          nome: string
+          observacoes: string | null
+          prazo: string | null
+          responsavel: string | null
+          uf: string | null
+          updated_at: string
+        }
+        Insert: {
+          cidade?: string | null
+          codigo: string
+          created_at?: string
+          created_by?: string | null
+          extensao_km?: number | null
+          id?: string
+          nome: string
+          observacoes?: string | null
+          prazo?: string | null
+          responsavel?: string | null
+          uf?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cidade?: string | null
+          codigo?: string
+          created_at?: string
+          created_by?: string | null
+          extensao_km?: number | null
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          prazo?: string | null
+          responsavel?: string | null
+          uf?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          nome: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          nome?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "atualizador"
+      etapa_status: "pendente" | "em_andamento" | "concluida" | "bloqueada"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +287,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "atualizador"],
+      etapa_status: ["pendente", "em_andamento", "concluida", "bloqueada"],
+    },
   },
 } as const
