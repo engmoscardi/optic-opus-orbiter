@@ -1,24 +1,86 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { ETAPAS } from "@/lib/obras";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "FiberFlow — Workflow de obras de fibra óptica" },
+      {
+        name: "description",
+        content:
+          "Cadastre obras de implantação de fibra óptica e acompanhe as 9 etapas: planejamento, projetos, licenças, materiais, execução, baixa e aceitação.",
+      },
+      { property: "og:title", content: "FiberFlow — Workflow de obras de fibra óptica" },
+      {
+        property: "og:description",
+        content: "Controle completo das etapas das suas obras de fibra óptica, do planejamento à aceitação.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    void supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate({ to: "/obras", replace: true });
+    });
+  }, [navigate]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background">
+      <header className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
+        <div className="flex items-center gap-2">
+          <div className="grid size-8 place-items-center rounded-lg bg-primary font-bold text-primary-foreground">
+            F
+          </div>
+          <span className="text-lg font-bold tracking-tight">FiberFlow</span>
+        </div>
+        <Link
+          to="/auth"
+          className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+        >
+          Entrar
+        </Link>
+      </header>
+
+      <main className="mx-auto max-w-3xl px-4 py-12">
+        <h1 className="text-3xl font-bold leading-tight tracking-tight">
+          Workflow de obras de fibra óptica
+        </h1>
+        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+          Cadastre cada obra de implantação e atualize o andamento das nove etapas previstas — do planejamento
+          à aceitação — com responsáveis, datas e observações.
+        </p>
+
+        <div className="mt-8 space-y-2">
+          {ETAPAS.map((etapa, i) => (
+            <div
+              key={etapa}
+              className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3"
+            >
+              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-secondary text-[11px] font-bold text-muted-foreground">
+                {i + 1}
+              </span>
+              <span className="text-sm font-medium">{etapa}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-border bg-card p-4">
+          <h2 className="label-tec">Perfis de acesso</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            <span className="font-semibold text-foreground">Administrador</span> cadastra, edita e exclui obras.{" "}
+            <span className="font-semibold text-foreground">Atualizador</span> registra o andamento das etapas.
+          </p>
+        </div>
+      </main>
     </div>
   );
 }
