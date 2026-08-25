@@ -76,7 +76,10 @@ function DetalheObra() {
   const excluir = async () => {
     if (!window.confirm("Excluir esta obra e todas as etapas?")) return;
     const { error } = await supabase.from("obras").delete().eq("id", obraId);
-    if (error) return toast.error("Erro ao excluir: " + error.message);
+    if (error) {
+      toast.error("Erro ao excluir: " + error.message);
+      return;
+    }
     await qc.invalidateQueries({ queryKey: ["obras"] });
     toast.success("Obra excluída.");
     window.history.back();
