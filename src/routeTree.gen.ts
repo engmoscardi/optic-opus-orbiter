@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedObrasIndexRouteImport } from './routes/_authenticated/obras/index'
+import { Route as AuthenticatedObrasObraIdRouteImport } from './routes/_authenticated/obras/$obraId'
 import { Route as AuthenticatedObrasNovaRouteImport } from './routes/_authenticated/obras/nova'
 
 const IndexRoute = IndexRouteImport.update({
@@ -34,6 +35,12 @@ const AuthenticatedObrasIndexRoute = AuthenticatedObrasIndexRouteImport.update({
   path: '/obras/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedObrasObraIdRoute =
+  AuthenticatedObrasObraIdRouteImport.update({
+    id: '/obras/$obraId',
+    path: '/obras/$obraId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedObrasNovaRoute = AuthenticatedObrasNovaRouteImport.update({
   id: '/obras/nova',
   path: '/obras/nova',
@@ -43,12 +50,14 @@ const AuthenticatedObrasNovaRoute = AuthenticatedObrasNovaRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/obras/$obraId': typeof AuthenticatedObrasObraIdRoute
   '/obras/nova': typeof AuthenticatedObrasNovaRoute
   '/obras/': typeof AuthenticatedObrasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/obras/$obraId': typeof AuthenticatedObrasObraIdRoute
   '/obras/nova': typeof AuthenticatedObrasNovaRoute
   '/obras': typeof AuthenticatedObrasIndexRoute
 }
@@ -57,19 +66,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/obras/$obraId': typeof AuthenticatedObrasObraIdRoute
   '/_authenticated/obras/nova': typeof AuthenticatedObrasNovaRoute
   '/_authenticated/obras/': typeof AuthenticatedObrasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/obras/nova' | '/obras/'
+  fullPaths: '/' | '/auth' | '/obras/$obraId' | '/obras/nova' | '/obras/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/obras/nova' | '/obras'
+  to: '/' | '/auth' | '/obras/$obraId' | '/obras/nova' | '/obras'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/obras/$obraId'
     | '/_authenticated/obras/nova'
     | '/_authenticated/obras/'
   fileRoutesById: FileRoutesById
@@ -110,6 +121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedObrasIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/obras/$obraId': {
+      id: '/_authenticated/obras/$obraId'
+      path: '/obras/$obraId'
+      fullPath: '/obras/$obraId'
+      preLoaderRoute: typeof AuthenticatedObrasObraIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/obras/nova': {
       id: '/_authenticated/obras/nova'
       path: '/obras/nova'
@@ -121,11 +139,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedObrasObraIdRoute: typeof AuthenticatedObrasObraIdRoute
   AuthenticatedObrasNovaRoute: typeof AuthenticatedObrasNovaRoute
   AuthenticatedObrasIndexRoute: typeof AuthenticatedObrasIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedObrasObraIdRoute: AuthenticatedObrasObraIdRoute,
   AuthenticatedObrasNovaRoute: AuthenticatedObrasNovaRoute,
   AuthenticatedObrasIndexRoute: AuthenticatedObrasIndexRoute,
 }
