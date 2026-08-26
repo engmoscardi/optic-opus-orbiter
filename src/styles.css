@@ -53,39 +53,41 @@
 }
 
 :root {
-  --radius: 1rem;
-  --background: oklch(0.984 0.003 247.858);
-  --foreground: oklch(0.208 0.042 265.755);
-  --surface: oklch(0.968 0.007 247.896);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.208 0.042 265.755);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.208 0.042 265.755);
-  --primary: oklch(0.588 0.145 242.5);
-  --primary-foreground: oklch(0.99 0.005 240);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.279 0.041 260.031);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.94 0.02 240);
-  --accent-foreground: oklch(0.279 0.041 260.031);
-  --success: oklch(0.696 0.17 162.48);
-  --success-foreground: oklch(0.99 0.01 160);
-  --warning: oklch(0.828 0.15 84.429);
-  --warning-foreground: oklch(0.32 0.07 60);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.99 0.005 20);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.588 0.145 242.5);
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-primary: oklch(0.588 0.145 242.5);
-  --sidebar-primary-foreground: oklch(0.99 0.005 240);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.279 0.041 260.031);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.588 0.145 242.5);
+  --radius: 0.875rem;
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --surface: #f5f3f7;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #660099;
+  --primary-dark: #4b0072;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f3f7;
+  --secondary-foreground: #4b0072;
+  --muted: #f5f3f7;
+  --muted-foreground: #5c5c5c;
+  --accent: #ec008c;
+  --accent-foreground: #ffffff;
+  --success: #00a650;
+  --success-foreground: #ffffff;
+  --warning: #ff6b00;
+  --warning-foreground: #ffffff;
+  --destructive: #d5001f;
+  --destructive-foreground: #ffffff;
+  --border: #e0dde5;
+  --input: #e0dde5;
+  --ring: #660099;
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #660099;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f3f7;
+  --sidebar-accent-foreground: #4b0072;
+  --sidebar-border: #e0dde5;
+  --sidebar-ring: #660099;
 }
 
 @layer base {
@@ -109,3 +111,16 @@
   font-weight: 700;
   color: var(--color-muted-foreground);
 }
+
+@utility card-vivo {
+  background-color: var(--color-card);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+}
+
+@utility btn-pill {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
