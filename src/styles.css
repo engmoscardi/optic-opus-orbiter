@@ -5,9 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system — FiberFlow (utility-first field ops)
- * Light, técnico, denso. Azul fibra + verde sinal sobre superfície slate.
+ * Design system — FiberFlow sobre identidade Vivo
+ * Roxo #660099 primário, magenta #EC008C de destaque, superfícies claras.
  */
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 6px);
