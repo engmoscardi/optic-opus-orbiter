@@ -104,7 +104,7 @@ function DetalheObra() {
           ← Voltar ao painel
         </Link>
 
-        <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+        <section className="card-vivo p-4 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h1 className="text-lg font-bold leading-tight">{obra.nome}</h1>
@@ -196,7 +196,7 @@ function EtapaItem({
     "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none";
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-card">
+    <div className="overflow-hidden card-vivo">
       <button onClick={onToggle} className="flex w-full items-center gap-3 p-4 text-left">
         <div
           className={

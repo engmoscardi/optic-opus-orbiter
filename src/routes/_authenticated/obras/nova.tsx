@@ -78,7 +78,7 @@ function NovaObra() {
   if (!loading && !isAdmin) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-border bg-card p-6 text-center">
+        <div className="card-vivo p-6 text-center">
           <p className="text-sm font-semibold">Acesso restrito</p>
           <p className="mt-1 text-xs text-muted-foreground">
             Apenas administradores podem cadastrar obras. Você pode atualizar as etapas das obras existentes.
@@ -100,7 +100,7 @@ function NovaObra() {
           </p>
         </div>
 
-        <div className="space-y-4 rounded-2xl border border-border bg-card p-4">
+        <div className="space-y-4 card-vivo p-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="label-tec">Código</label>
@@ -152,7 +152,7 @@ function NovaObra() {
         <button
           type="submit"
           disabled={salvando}
-          className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+          className="w-full rounded-full bg-primary transition-colors hover:bg-primary-dark py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
         >
           {salvando ? "Salvando..." : "Cadastrar obra"}
         </button>

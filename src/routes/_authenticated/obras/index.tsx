@@ -81,7 +81,7 @@ function ObrasPage() {
           {isAdmin && (
             <Link
               to="/obras/nova"
-              className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+              className="flex items-center gap-1.5 rounded-full bg-primary transition-colors hover:bg-primary-dark px-4 py-2.5 text-sm font-semibold text-primary-foreground"
             >
               <span className="text-base leading-none">+</span> Nova Obra
             </Link>
@@ -122,7 +122,7 @@ function ObrasPage() {
                           key={obra.id}
                           to="/obras/$obraId"
                           params={{ obraId: obra.id }}
-                          className="block rounded-2xl border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
+                          className="block card-vivo p-4 shadow-sm transition-shadow hover:shadow-md"
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div>

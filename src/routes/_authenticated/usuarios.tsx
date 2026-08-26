@@ -66,7 +66,7 @@ function Usuarios() {
   if (!loading && !isAdmin) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-border bg-card p-6 text-center">
+        <div className="card-vivo p-6 text-center">
           <p className="text-sm font-semibold">Acesso restrito</p>
           <p className="mt-1 text-xs text-muted-foreground">
             Apenas administradores gerenciam permissões.
@@ -86,7 +86,7 @@ function Usuarios() {
           </p>
         </div>
 
-        <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
+        <div className="divide-y divide-border overflow-hidden card-vivo">
           {(data?.perfis ?? []).map((p) => {
             const role = data?.papeis.find((r) => r.user_id === p.id)?.role ?? "atualizador";
             return (

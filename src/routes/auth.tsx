@@ -81,7 +81,7 @@ function AuthPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="card-vivo p-5 shadow-sm">
           <div className="mb-4 flex gap-1 rounded-xl bg-secondary p-1">
             {(["entrar", "criar"] as const).map((m) => (
               <button
@@ -134,7 +134,7 @@ function AuthPage() {
             <button
               type="submit"
               disabled={carregando}
-              className="w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+              className="w-full rounded-full bg-primary transition-colors hover:bg-primary-dark py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
             >
               {modo === "entrar" ? "Entrar" : "Criar conta"}
             </button>

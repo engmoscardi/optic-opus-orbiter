@@ -44,7 +44,7 @@ function Index() {
         </div>
         <Link
           to="/auth"
-          className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          className="rounded-full bg-primary transition-colors hover:bg-primary-dark px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
           Entrar
         </Link>
@@ -63,7 +63,7 @@ function Index() {
           {ETAPAS.map((etapa, i) => (
             <div
               key={etapa}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3"
+              className="flex items-center gap-3 card-vivo px-4 py-3"
             >
               <span className="grid size-6 shrink-0 place-items-center rounded-full bg-secondary text-[11px] font-bold text-muted-foreground">
                 {i + 1}
@@ -73,7 +73,7 @@ function Index() {
           ))}
         </div>
 
-        <div className="mt-8 rounded-2xl border border-border bg-card p-4">
+        <div className="mt-8 card-vivo p-4">
           <h2 className="label-tec">Perfis de acesso</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             <span className="font-semibold text-foreground">Administrador</span> cadastra, edita e exclui obras.{" "}
