@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutGrid, Plus, Users, LogOut } from "lucide-react";
+import { LayoutGrid, Plus, Users, LogOut, Upload } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { iniciais, useAuth } from "@/hooks/useAuth";
@@ -19,6 +19,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     ...(isAdmin
       ? [
           { to: "/obras/nova", label: "Nova obra", icon: Plus },
+          { to: "/obras/importar", label: "Importar", icon: Upload },
           { to: "/usuarios", label: "Usuários", icon: Users },
         ]
       : []),
