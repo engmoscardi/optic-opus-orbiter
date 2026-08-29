@@ -42,7 +42,11 @@ type ObraComEtapas = Obra & { obra_etapas: Etapa[] };
 
 function ObrasPage() {
   const { isAdmin } = useAuth();
+  const qc = useQueryClient();
   const [busca, setBusca] = useState("");
+  const [arrastando, setArrastando] = useState<string | null>(null);
+  const [sobreColuna, setSobreColuna] = useState<number | null>(null);
+  const [salvando, setSalvando] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["obras"],
@@ -55,6 +59,46 @@ function ObrasPage() {
       return (data ?? []) as unknown as ObraComEtapas[];
     },
   });
+
+  const colunaDaObra = (obra: ObraComEtapas): number => {
+    const etapas = [...(obra.obra_etapas ?? [])].sort((a, b) => a.ordem - b.ordem);
+    if (etapas.length > 0 && etapas.every((e) => e.status === "concluida")) return ETAPAS.length - 1;
+    const atual = etapaAtual(etapas);
+    const idx = ETAPAS.findIndex((nome) => nome === atual?.nome);
+    return idx >= 0 ? idx : 0;
+  };
+
+  const moverObra = async (obraId: string, alvoIdx: number) => {
+    const obra = (data ?? []).find((o) => o.id === obraId);
+    if (!obra) return;
+    const atualIdx = colunaDaObra(obra);
+    if (atualIdx === alvoIdx) return;
+    setSalvando(true);
+    const etapas = [...(obra.obra_etapas ?? [])].sort((a, b) => a.ordem - b.ordem);
+    const { data: userData } = await supabase.auth.getUser();
+    const results = await Promise.all(
+      etapas.map((e, i) => {
+        const status: EtapaStatus = i < alvoIdx ? "concluida" : i === alvoIdx ? "em_andamento" : "pendente";
+        if (e.status === status) return Promise.resolve({ error: null });
+        return supabase
+          .from("obra_etapas")
+          .update({
+            status,
+            data_conclusao: status === "concluida" ? new Date().toISOString().slice(0, 10) : null,
+            updated_by: userData.user?.id ?? null,
+          })
+          .eq("id", e.id);
+      }),
+    );
+    setSalvando(false);
+    const erro = results.find((r) => r.error)?.error;
+    if (erro) {
+      toast.error("Erro ao mover obra: " + erro.message);
+      return;
+    }
+    await qc.invalidateQueries({ queryKey: ["obras"] });
+    toast.success(`Obra movida para "${ETAPAS[alvoIdx]}".`);
+  };
 
   const obras = (data ?? []).filter((o) =>
     `${o.codigo} ${o.nome} ${o.cidade ?? ""}`.toLowerCase().includes(busca.toLowerCase()),
