@@ -40,6 +40,13 @@ function NovaObra() {
     responsavel: "",
     prazo: "",
     observacoes: "",
+    regional: "",
+    contratada: "",
+    etp: "",
+    op: "",
+    plano_ano: "",
+    prioridade: "",
+    tipo_obra: "",
   });
   const [salvando, setSalvando] = useState(false);
 
