@@ -1,12 +1,8 @@
 export const ETAPAS = [
-  "Planejamento",
   "Projetos",
   "Protocolos de Licenças",
-  "Licenças para Obras",
-  "Fornecimento de Materiais",
   "Dependência Extra",
   "Execução",
-  "Baixa da Obra",
   "Aceitação",
 ] as const;
 
