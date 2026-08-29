@@ -101,6 +101,23 @@ export function parseCsvObras(texto: string): { linhas: LinhaImport[]; colunasDe
   return { linhas, colunasDesconhecidas };
 }
 
+function escaparCsv(v: string) {
+  return /[";\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+}
+
+export function baixarCsv(nomeArquivo: string, cabecalho: string[], linhas: string[][]) {
+  const conteudo = "\uFEFF" + [cabecalho, ...linhas]
+    .map((cols) => cols.map(escaparCsv).join(";"))
+    .join("\n");
+  const blob = new Blob([conteudo], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nomeArquivo;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function linhaParaObra(l: LinhaImport, createdBy: string | null) {
   const v = l.valores;
   return {
