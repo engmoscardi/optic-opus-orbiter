@@ -68,6 +68,13 @@ function NovaObra() {
         responsavel: form.responsavel || null,
         prazo: form.prazo || null,
         observacoes: form.observacoes || null,
+        regional: form.regional || null,
+        contratada: form.contratada || null,
+        etp: form.etp || null,
+        op: form.op || null,
+        plano_ano: form.plano_ano ? Number(form.plano_ano) : null,
+        prioridade: form.prioridade || null,
+        tipo_obra: form.tipo_obra || null,
         created_by: userData.user?.id ?? null,
       })
       .select("id")
@@ -78,7 +85,7 @@ function NovaObra() {
       return;
     }
     await qc.invalidateQueries({ queryKey: ["obras"] });
-    toast.success("Obra cadastrada com as 9 etapas.");
+    toast.success("Obra cadastrada com as 5 etapas.");
     navigate({ to: "/obras/$obraId", params: { obraId: data.id } });
   };
 
@@ -103,7 +110,7 @@ function NovaObra() {
         <div>
           <h1 className="text-xl font-bold tracking-tight">Cadastrar obra</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            As 9 etapas do workflow são criadas automaticamente.
+            As 5 etapas do workflow são criadas automaticamente.
           </p>
         </div>
 
@@ -148,6 +155,43 @@ function NovaObra() {
           <div className="space-y-1.5">
             <label className="label-tec">Prazo</label>
             <input type="date" value={form.prazo} onChange={set("prazo")} className={campo} />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <label className="label-tec">Regional</label>
+              <input value={form.regional} onChange={set("regional")} className={campo} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="label-tec">Contratada</label>
+              <input value={form.contratada} onChange={set("contratada")} className={campo} />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <label className="label-tec">ETP</label>
+              <input value={form.etp} onChange={set("etp")} className={campo} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="label-tec">OP</label>
+              <input value={form.op} onChange={set("op")} className={campo} />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="space-y-1.5">
+              <label className="label-tec">Plano Ano</label>
+              <input type="number" min={2000} max={2100} value={form.plano_ano} onChange={set("plano_ano")} className={campo} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="label-tec">Prioridade</label>
+              <input value={form.prioridade} onChange={set("prioridade")} placeholder="Alta, Média, Baixa" className={campo} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="label-tec">Tipo da Obra</label>
+              <input value={form.tipo_obra} onChange={set("tipo_obra")} placeholder="FTTH, Overlash..." className={campo} />
+            </div>
           </div>
 
           <div className="space-y-1.5">
