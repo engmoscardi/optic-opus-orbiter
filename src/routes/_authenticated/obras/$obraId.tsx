@@ -326,3 +326,99 @@ function EtapaItem({
     </div>
   );
 }
+
+function EditarObraForm({
+  obra,
+  salvando,
+  onCancel,
+  onSave,
+}: {
+  obra: Obra;
+  salvando: boolean;
+  onCancel: () => void;
+  onSave: (patch: Record<string, unknown>) => void;
+}) {
+  const [nome, setNome] = useState(obra.nome);
+  const [codigo, setCodigo] = useState(obra.codigo);
+  const [cidade, setCidade] = useState(obra.cidade ?? "");
+  const [uf, setUf] = useState(obra.uf ?? "");
+  const [extensao, setExtensao] = useState(obra.extensao_km != null ? String(obra.extensao_km) : "");
+  const [responsavel, setResponsavel] = useState(obra.responsavel ?? "");
+  const [prazo, setPrazo] = useState(obra.prazo ?? "");
+  const [observacoes, setObservacoes] = useState(obra.observacoes ?? "");
+
+  const campo =
+    "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none";
+
+  return (
+    <div className="space-y-3">
+      <h2 className="text-sm font-bold">Editar obra</h2>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label className="label-tec">Nome da obra</label>
+          <input value={nome} onChange={(e) => setNome(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Código</label>
+          <input value={codigo} onChange={(e) => setCodigo(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Cidade</label>
+          <input value={cidade} onChange={(e) => setCidade(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">UF</label>
+          <input value={uf} onChange={(e) => setUf(e.target.value)} maxLength={2} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Extensão (km)</label>
+          <input
+            type="number"
+            step="0.01"
+            value={extensao}
+            onChange={(e) => setExtensao(e.target.value)}
+            className={campo}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Prazo</label>
+          <input type="date" value={prazo} onChange={(e) => setPrazo(e.target.value)} className={campo} />
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        <label className="label-tec">Responsável</label>
+        <input value={responsavel} onChange={(e) => setResponsavel(e.target.value)} className={campo} />
+      </div>
+      <div className="space-y-1.5">
+        <label className="label-tec">Observações</label>
+        <textarea rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} className={campo} />
+      </div>
+      <div className="flex gap-2">
+        <button
+          disabled={salvando || !nome.trim() || !codigo.trim()}
+          onClick={() =>
+            onSave({
+              nome: nome.trim(),
+              codigo: codigo.trim(),
+              cidade: cidade.trim() || null,
+              uf: uf.trim().toUpperCase() || null,
+              extensao_km: extensao ? Number(extensao) : null,
+              responsavel: responsavel.trim() || null,
+              prazo: prazo || null,
+              observacoes: observacoes.trim() || null,
+            })
+          }
+          className="flex-1 rounded-full bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-dark disabled:opacity-60"
+        >
+          Salvar alterações
+        </button>
+        <button
+          onClick={onCancel}
+          className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-secondary"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  );
+}
