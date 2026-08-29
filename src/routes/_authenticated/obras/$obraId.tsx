@@ -337,7 +337,7 @@ function EditarObraForm({
   obra: Obra;
   salvando: boolean;
   onCancel: () => void;
-  onSave: (patch: Record<string, unknown>) => void;
+  onSave: (patch: TablesUpdate<"obras">) => void;
 }) {
   const [nome, setNome] = useState(obra.nome);
   const [codigo, setCodigo] = useState(obra.codigo);
