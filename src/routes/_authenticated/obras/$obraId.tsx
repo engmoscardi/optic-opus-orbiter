@@ -56,6 +56,22 @@ function DetalheObra() {
     },
   });
 
+  const [editando, setEditando] = useState(false);
+
+  const salvarObra = useMutation({
+    mutationFn: async (patch: Record<string, unknown>) => {
+      const { error } = await supabase.from("obras").update(patch).eq("id", obraId);
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ["obra", obraId] });
+      await qc.invalidateQueries({ queryKey: ["obras"] });
+      setEditando(false);
+      toast.success("Obra atualizada.");
+    },
+    onError: (e: Error) => toast.error("Erro ao salvar: " + e.message),
+  });
+
   const atualizar = useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Etapa> }) => {
       const { data: userData } = await supabase.auth.getUser();
