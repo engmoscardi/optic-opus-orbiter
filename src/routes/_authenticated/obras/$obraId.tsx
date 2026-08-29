@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Check, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -56,6 +57,22 @@ function DetalheObra() {
     },
   });
 
+  const [editando, setEditando] = useState(false);
+
+  const salvarObra = useMutation({
+    mutationFn: async (patch: TablesUpdate<"obras">) => {
+      const { error } = await supabase.from("obras").update(patch).eq("id", obraId);
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ["obra", obraId] });
+      await qc.invalidateQueries({ queryKey: ["obras"] });
+      setEditando(false);
+      toast.success("Obra atualizada.");
+    },
+    onError: (e: Error) => toast.error("Erro ao salvar: " + e.message),
+  });
+
   const atualizar = useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Etapa> }) => {
       const { data: userData } = await supabase.auth.getUser();
@@ -105,44 +122,78 @@ function DetalheObra() {
         </Link>
 
         <section className="card-vivo p-4 shadow-sm">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h1 className="text-lg font-bold leading-tight">{obra.nome}</h1>
-              <p className="text-sm text-muted-foreground">
-                Cód: {obra.codigo}
-                {obra.cidade ? ` • ${obra.cidade}${obra.uf ? "/" + obra.uf : ""}` : ""}
-              </p>
-            </div>
-            <span className="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase text-primary">
-              {concluidas}/{etapas.length} etapas
-            </span>
-          </div>
+          {editando ? (
+            <EditarObraForm
+              obra={obra}
+              salvando={salvarObra.isPending}
+              onCancel={() => setEditando(false)}
+              onSave={(patch) => salvarObra.mutate(patch)}
+            />
+          ) : (
+            <>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h1 className="text-lg font-bold leading-tight">{obra.nome}</h1>
+                  <p className="text-sm text-muted-foreground">
+                    Cód: {obra.codigo}
+                    {obra.cidade ? ` • ${obra.cidade}${obra.uf ? "/" + obra.uf : ""}` : ""}
+                  </p>
+                </div>
+                <span className="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase text-primary">
+                  {concluidas}/{etapas.length} etapas
+                </span>
+              </div>
 
-          <div className="mt-6 h-2 w-full overflow-hidden rounded-full bg-secondary">
-            <div className="h-full bg-success" style={{ width: `${pct}%` }} />
-          </div>
+              <div className="mt-6 h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <div className="h-full bg-success" style={{ width: `${pct}%` }} />
+              </div>
 
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            <div className="rounded-lg bg-secondary p-2 text-center">
-              <p className="label-tec">Progresso</p>
-              <p className="font-bold">{pct}%</p>
-            </div>
-            <div className="rounded-lg bg-secondary p-2 text-center">
-              <p className="label-tec">Extensão</p>
-              <p className="font-bold">{obra.extensao_km ?? "—"} km</p>
-            </div>
-            <div className="rounded-lg bg-secondary p-2 text-center">
-              <p className="label-tec">Prazo</p>
-              <p className="font-bold">
-                {obra.prazo ? new Date(obra.prazo + "T00:00:00").toLocaleDateString("pt-BR") : "—"}
-              </p>
-            </div>
-          </div>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <div className="rounded-lg bg-secondary p-2 text-center">
+                  <p className="label-tec">Progresso</p>
+                  <p className="font-bold">{pct}%</p>
+                </div>
+                <div className="rounded-lg bg-secondary p-2 text-center">
+                  <p className="label-tec">Extensão</p>
+                  <p className="font-bold">{obra.extensao_km ?? "—"} km</p>
+                </div>
+                <div className="rounded-lg bg-secondary p-2 text-center">
+                  <p className="label-tec">Prazo</p>
+                  <p className="font-bold">
+                    {obra.prazo ? new Date(obra.prazo + "T00:00:00").toLocaleDateString("pt-BR") : "—"}
+                  </p>
+                </div>
+              </div>
 
-          {obra.responsavel && (
-            <p className="mt-3 text-xs text-muted-foreground">Responsável: {obra.responsavel}</p>
+              <dl className="mt-3 space-y-1 text-xs text-muted-foreground">
+                {obra.responsavel && (
+                  <div className="flex gap-1">
+                    <dt className="font-semibold text-foreground">Responsável:</dt>
+                    <dd>{obra.responsavel}</dd>
+                  </div>
+                )}
+                {obra.observacoes && (
+                  <div className="flex gap-1">
+                    <dt className="font-semibold text-foreground">Observações:</dt>
+                    <dd>{obra.observacoes}</dd>
+                  </div>
+                )}
+                <div className="flex gap-1">
+                  <dt className="font-semibold text-foreground">Cadastrada em:</dt>
+                  <dd>{new Date(obra.created_at).toLocaleDateString("pt-BR")}</dd>
+                </div>
+              </dl>
+
+              {isAdmin && (
+                <button
+                  onClick={() => setEditando(true)}
+                  className="mt-4 w-full rounded-full border border-border py-2 text-sm font-semibold transition-colors hover:border-primary hover:text-primary"
+                >
+                  Editar dados da obra
+                </button>
+              )}
+            </>
           )}
-          {obra.observacoes && <p className="mt-1 text-xs text-muted-foreground">{obra.observacoes}</p>}
         </section>
 
         <section className="space-y-3">
@@ -273,6 +324,102 @@ function EtapaItem({
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+function EditarObraForm({
+  obra,
+  salvando,
+  onCancel,
+  onSave,
+}: {
+  obra: Obra;
+  salvando: boolean;
+  onCancel: () => void;
+  onSave: (patch: TablesUpdate<"obras">) => void;
+}) {
+  const [nome, setNome] = useState(obra.nome);
+  const [codigo, setCodigo] = useState(obra.codigo);
+  const [cidade, setCidade] = useState(obra.cidade ?? "");
+  const [uf, setUf] = useState(obra.uf ?? "");
+  const [extensao, setExtensao] = useState(obra.extensao_km != null ? String(obra.extensao_km) : "");
+  const [responsavel, setResponsavel] = useState(obra.responsavel ?? "");
+  const [prazo, setPrazo] = useState(obra.prazo ?? "");
+  const [observacoes, setObservacoes] = useState(obra.observacoes ?? "");
+
+  const campo =
+    "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none";
+
+  return (
+    <div className="space-y-3">
+      <h2 className="text-sm font-bold">Editar obra</h2>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label className="label-tec">Nome da obra</label>
+          <input value={nome} onChange={(e) => setNome(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Código</label>
+          <input value={codigo} onChange={(e) => setCodigo(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Cidade</label>
+          <input value={cidade} onChange={(e) => setCidade(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">UF</label>
+          <input value={uf} onChange={(e) => setUf(e.target.value)} maxLength={2} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Extensão (km)</label>
+          <input
+            type="number"
+            step="0.01"
+            value={extensao}
+            onChange={(e) => setExtensao(e.target.value)}
+            className={campo}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Prazo</label>
+          <input type="date" value={prazo} onChange={(e) => setPrazo(e.target.value)} className={campo} />
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        <label className="label-tec">Responsável</label>
+        <input value={responsavel} onChange={(e) => setResponsavel(e.target.value)} className={campo} />
+      </div>
+      <div className="space-y-1.5">
+        <label className="label-tec">Observações</label>
+        <textarea rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} className={campo} />
+      </div>
+      <div className="flex gap-2">
+        <button
+          disabled={salvando || !nome.trim() || !codigo.trim()}
+          onClick={() =>
+            onSave({
+              nome: nome.trim(),
+              codigo: codigo.trim(),
+              cidade: cidade.trim() || null,
+              uf: uf.trim().toUpperCase() || null,
+              extensao_km: extensao ? Number(extensao) : null,
+              responsavel: responsavel.trim() || null,
+              prazo: prazo || null,
+              observacoes: observacoes.trim() || null,
+            })
+          }
+          className="flex-1 rounded-full bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-dark disabled:opacity-60"
+        >
+          Salvar alterações
+        </button>
+        <button
+          onClick={onCancel}
+          className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-secondary"
+        >
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }
