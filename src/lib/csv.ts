@@ -7,14 +7,21 @@ export const COLUNAS_IMPORT = [
   "responsavel",
   "prazo",
   "observacoes",
+  "regional",
+  "contratada",
+  "etp",
+  "op",
+  "plano_ano",
+  "prioridade",
+  "tipo_obra",
 ] as const;
 
 export type ColunaImport = (typeof COLUNAS_IMPORT)[number];
 
 export const MODELO_CSV = [
   COLUNAS_IMPORT.join(";"),
-  "2024-0892;FTTH Setor Norte - Trecho A;Campinas;SP;12.5;Ana Souza;2026-03-31;Obra prioritária",
-  "2024-0893;FTTH Setor Sul - Trecho B;Sorocaba;SP;8;Carlos Lima;2026-05-15;",
+  "2024-0892;FTTH Setor Norte - Trecho A;Campinas;SP;12.5;Ana Souza;2026-03-31;Obra prioritária;Sudeste I;Construtora Alfa;ETP-1234;OP-5678;2026;Alta;FTTH",
+  "2024-0893;FTTH Setor Sul - Trecho B;Sorocaba;SP;8;Carlos Lima;2026-05-15;;Sudeste II;Construtora Beta;;;;;Overlash",
 ].join("\n");
 
 function detectarSeparador(linha: string) {

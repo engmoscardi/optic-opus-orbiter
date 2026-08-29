@@ -34,6 +34,13 @@ export type Obra = {
   responsavel: string | null;
   prazo: string | null;
   observacoes: string | null;
+  regional: string | null;
+  contratada: string | null;
+  etp: string | null;
+  op: string | null;
+  plano_ano: number | null;
+  prioridade: string | null;
+  tipo_obra: string | null;
   created_at: string;
 };
 
