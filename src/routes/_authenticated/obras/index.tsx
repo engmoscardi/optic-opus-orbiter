@@ -177,9 +177,28 @@ function ObrasPage() {
           <div className="-mx-4 overflow-x-auto px-4 pb-2">
             <div className="flex min-w-max gap-3">
               {colunas.map((coluna) => (
-                <section key={coluna.status} className="w-72 shrink-0 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h2 className="label-tec">{STATUS_LABEL[coluna.status]}</h2>
+                <section
+                  key={coluna.nome}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setSobreColuna(coluna.idx);
+                  }}
+                  onDragLeave={() => setSobreColuna((c) => (c === coluna.idx ? null : c))}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const obraId = e.dataTransfer.getData("text/plain");
+                    setSobreColuna(null);
+                    setArrastando(null);
+                    if (obraId) void moverObra(obraId, coluna.idx);
+                  }}
+                  className={`w-72 shrink-0 space-y-3 rounded-2xl p-2 transition-colors ${
+                    sobreColuna === coluna.idx && arrastando ? "bg-primary/10 ring-2 ring-primary/40" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-between px-1">
+                    <h2 className="label-tec">
+                      {coluna.idx + 1}. {coluna.nome}
+                    </h2>
                     <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
                       {coluna.itens.length}
                     </span>
@@ -188,13 +207,23 @@ function ObrasPage() {
                     {coluna.itens.map((obra) => {
                       const etapas = obra.obra_etapas ?? [];
                       const pct = progresso(etapas);
-                      const atual = etapaAtual(etapas);
+                      const atual = etapaAtual([...etapas].sort((a, b) => a.ordem - b.ordem));
                       return (
-                        <Link
+                        <div
                           key={obra.id}
-                          to="/obras/$obraId"
-                          params={{ obraId: obra.id }}
-                          className="block card-vivo p-4 shadow-sm transition-shadow hover:shadow-md"
+                          draggable={!salvando}
+                          onDragStart={(e) => {
+                            e.dataTransfer.setData("text/plain", obra.id);
+                            e.dataTransfer.effectAllowed = "move";
+                            setArrastando(obra.id);
+                          }}
+                          onDragEnd={() => {
+                            setArrastando(null);
+                            setSobreColuna(null);
+                          }}
+                          className={`card-vivo p-4 shadow-sm transition-all hover:shadow-md ${
+                            arrastando === obra.id ? "opacity-50" : "cursor-grab active:cursor-grabbing"
+                          }`}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div>
@@ -205,7 +234,9 @@ function ObrasPage() {
                               </p>
                             </div>
                             <span
-                              className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase ${STATUS_CLASS[coluna.status]}`}
+                              className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase ${
+                                atual ? STATUS_CLASS[atual.status] : "bg-muted text-muted-foreground"
+                              }`}
                             >
                               {pct}%
                             </span>
@@ -215,15 +246,24 @@ function ObrasPage() {
                             <div className="h-full bg-success" style={{ width: `${pct}%` }} />
                           </div>
 
-                          <p className="mt-3 text-xs text-muted-foreground">
-                            Etapa: <span className="font-medium text-foreground">{atual?.nome ?? "—"}</span>
-                          </p>
-                        </Link>
+                          <div className="mt-3 flex items-center justify-between">
+                            <p className="text-xs text-muted-foreground">
+                              {atual ? STATUS_LABEL[atual.status] : "—"}
+                            </p>
+                            <Link
+                              to="/obras/$obraId"
+                              params={{ obraId: obra.id }}
+                              className="text-xs font-semibold text-primary hover:underline"
+                            >
+                              Detalhes →
+                            </Link>
+                          </div>
+                        </div>
                       );
                     })}
                     {coluna.itens.length === 0 && (
                       <div className="rounded-2xl border border-dashed border-border p-4 text-center text-[11px] text-muted-foreground">
-                        Sem obras
+                        Arraste uma obra para cá
                       </div>
                     )}
                   </div>
