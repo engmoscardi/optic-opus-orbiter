@@ -65,42 +65,63 @@ export type Database = {
         Row: {
           cidade: string | null
           codigo: string
+          contratada: string | null
           created_at: string
           created_by: string | null
+          etp: string | null
           extensao_km: number | null
           id: string
           nome: string
           observacoes: string | null
+          op: string | null
+          plano_ano: number | null
           prazo: string | null
+          prioridade: string | null
+          regional: string | null
           responsavel: string | null
+          tipo_obra: string | null
           uf: string | null
           updated_at: string
         }
         Insert: {
           cidade?: string | null
           codigo: string
+          contratada?: string | null
           created_at?: string
           created_by?: string | null
+          etp?: string | null
           extensao_km?: number | null
           id?: string
           nome: string
           observacoes?: string | null
+          op?: string | null
+          plano_ano?: number | null
           prazo?: string | null
+          prioridade?: string | null
+          regional?: string | null
           responsavel?: string | null
+          tipo_obra?: string | null
           uf?: string | null
           updated_at?: string
         }
         Update: {
           cidade?: string | null
           codigo?: string
+          contratada?: string | null
           created_at?: string
           created_by?: string | null
+          etp?: string | null
           extensao_km?: number | null
           id?: string
           nome?: string
           observacoes?: string | null
+          op?: string | null
+          plano_ano?: number | null
           prazo?: string | null
+          prioridade?: string | null
+          regional?: string | null
           responsavel?: string | null
+          tipo_obra?: string | null
           uf?: string | null
           updated_at?: string
         }
