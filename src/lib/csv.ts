@@ -101,6 +101,7 @@ export function parseCsvObras(texto: string): { linhas: LinhaImport[]; colunasDe
     if (valores.extensao_km && Number.isNaN(Number(valores.extensao_km.replace(",", "."))))
       erros.push("Extensão inválida");
     if (valores.prazo && !/^\d{4}-\d{2}-\d{2}$/.test(valores.prazo)) erros.push("Prazo deve ser AAAA-MM-DD");
+    if (valores.plano_ano && !/^\d{4}$/.test(valores.plano_ano)) erros.push("Plano Ano deve ter 4 dígitos");
 
     return { linha: idx + 2, valores, erros };
   });
@@ -136,6 +137,13 @@ export function linhaParaObra(l: LinhaImport, createdBy: string | null) {
     responsavel: v.responsavel || null,
     prazo: v.prazo || null,
     observacoes: v.observacoes || null,
+    regional: v.regional || null,
+    contratada: v.contratada || null,
+    etp: v.etp || null,
+    op: v.op || null,
+    plano_ano: v.plano_ano ? Number(v.plano_ano) : null,
+    prioridade: v.prioridade || null,
+    tipo_obra: v.tipo_obra || null,
     created_by: createdBy,
   };
 }
