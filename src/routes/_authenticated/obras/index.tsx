@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/hooks/useAuth";
 import {
+  ETAPAS,
   STATUS_CLASS,
   STATUS_LABEL,
   STATUS_ORDER,
@@ -14,6 +15,7 @@ import {
   type EtapaStatus,
   type Obra,
 } from "@/lib/obras";
+import { baixarCsv } from "@/lib/csv";
 
 export const Route = createFileRoute("/_authenticated/obras/")({
   head: () => ({
