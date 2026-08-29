@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/hooks/useAuth";
 import {
+  ETAPAS,
   STATUS_CLASS,
   STATUS_LABEL,
   STATUS_ORDER,
@@ -14,6 +15,7 @@ import {
   type EtapaStatus,
   type Obra,
 } from "@/lib/obras";
+import { baixarCsv } from "@/lib/csv";
 
 export const Route = createFileRoute("/_authenticated/obras/")({
   head: () => ({
@@ -58,6 +60,29 @@ function ObrasPage() {
     `${o.codigo} ${o.nome} ${o.cidade ?? ""}`.toLowerCase().includes(busca.toLowerCase()),
   );
 
+  const exportar = () => {
+    const cabecalho = [
+      "codigo", "nome", "cidade", "uf", "extensao_km", "responsavel", "prazo",
+      "observacoes", "progresso_pct", "etapa_atual", "criado_em",
+      ...ETAPAS.map((nome) => `etapa_${nome.toLowerCase().replace(/\s+/g, "_")}`),
+    ];
+    const linhas = obras.map((o) => {
+      const etapas = [...(o.obra_etapas ?? [])].sort((a, b) => a.ordem - b.ordem);
+      return [
+        o.codigo, o.nome, o.cidade ?? "", o.uf ?? "",
+        o.extensao_km != null ? String(o.extensao_km) : "",
+        o.responsavel ?? "", o.prazo ?? "", o.observacoes ?? "",
+        String(progresso(etapas)), etapaAtual(etapas)?.nome ?? "",
+        o.created_at ? new Date(o.created_at).toLocaleDateString("pt-BR") : "",
+        ...ETAPAS.map((nome) => {
+          const e = etapas.find((x) => x.nome === nome);
+          return e ? STATUS_LABEL[e.status] : "";
+        }),
+      ];
+    });
+    baixarCsv(`obras_fiberflow_${new Date().toISOString().slice(0, 10)}.csv`, cabecalho, linhas);
+  };
+
   const colunas: { status: EtapaStatus; itens: ObraComEtapas[] }[] = STATUS_ORDER.map((status) => ({
     status,
     itens: obras.filter((o) => {
@@ -78,6 +103,13 @@ function ObrasPage() {
             placeholder="Buscar obra..."
             className="flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-sm transition-all focus:border-primary focus:outline-none"
           />
+          <button
+            onClick={exportar}
+            disabled={!obras.length}
+            className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+          >
+            ↓ Baixar CSV
+          </button>
           {isAdmin && (
             <Link
               to="/obras/nova"
