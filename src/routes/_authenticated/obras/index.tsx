@@ -107,7 +107,8 @@ function ObrasPage() {
   const exportar = () => {
     const cabecalho = [
       "codigo", "nome", "cidade", "uf", "extensao_km", "responsavel", "prazo",
-      "observacoes", "progresso_pct", "etapa_atual", "criado_em",
+      "observacoes", "regional", "contratada", "etp", "op", "plano_ano",
+      "prioridade", "tipo_obra", "progresso_pct", "etapa_atual", "criado_em",
       ...ETAPAS.map((nome) => `etapa_${nome.toLowerCase().replace(/\s+/g, "_")}`),
     ];
     const linhas = obras.map((o) => {
@@ -116,6 +117,9 @@ function ObrasPage() {
         o.codigo, o.nome, o.cidade ?? "", o.uf ?? "",
         o.extensao_km != null ? String(o.extensao_km) : "",
         o.responsavel ?? "", o.prazo ?? "", o.observacoes ?? "",
+        o.regional ?? "", o.contratada ?? "", o.etp ?? "", o.op ?? "",
+        o.plano_ano != null ? String(o.plano_ano) : "",
+        o.prioridade ?? "", o.tipo_obra ?? "",
         String(progresso(etapas)), etapaAtual(etapas)?.nome ?? "",
         o.created_at ? new Date(o.created_at).toLocaleDateString("pt-BR") : "",
         ...ETAPAS.map((nome) => {

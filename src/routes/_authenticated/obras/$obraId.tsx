@@ -166,12 +166,27 @@ function DetalheObra() {
               </div>
 
               <dl className="mt-3 space-y-1 text-xs text-muted-foreground">
-                {obra.responsavel && (
-                  <div className="flex gap-1">
-                    <dt className="font-semibold text-foreground">Responsável:</dt>
-                    <dd>{obra.responsavel}</dd>
-                  </div>
+                {(
+                  [
+                    ["Responsável", obra.responsavel],
+                    ["Regional", obra.regional],
+                    ["Contratada", obra.contratada],
+                    ["ETP", obra.etp],
+                    ["OP", obra.op],
+                    ["Plano Ano", obra.plano_ano != null ? String(obra.plano_ano) : null],
+                    ["Prioridade", obra.prioridade],
+                    ["Tipo da Obra", obra.tipo_obra],
+                  ] as [string, string | null][]
+                ).map(
+                  ([rotulo, valor]) =>
+                    valor && (
+                      <div key={rotulo} className="flex gap-1">
+                        <dt className="font-semibold text-foreground">{rotulo}:</dt>
+                        <dd>{valor}</dd>
+                      </div>
+                    ),
                 )}
+                {obra.responsavel && null}
                 {obra.observacoes && (
                   <div className="flex gap-1">
                     <dt className="font-semibold text-foreground">Observações:</dt>
