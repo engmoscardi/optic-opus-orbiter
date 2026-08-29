@@ -127,14 +127,10 @@ function ObrasPage() {
     baixarCsv(`obras_fiberflow_${new Date().toISOString().slice(0, 10)}.csv`, cabecalho, linhas);
   };
 
-  const colunas: { status: EtapaStatus; itens: ObraComEtapas[] }[] = STATUS_ORDER.map((status) => ({
-    status,
-    itens: obras.filter((o) => {
-      const etapas = o.obra_etapas ?? [];
-      const done = etapas.length > 0 && etapas.every((e) => e.status === "concluida");
-      if (done) return status === "concluida";
-      return etapaAtual(etapas)?.status === status && status !== "concluida";
-    }),
+  const colunas = ETAPAS.map((nome, idx) => ({
+    nome,
+    idx,
+    itens: obras.filter((o) => colunaDaObra(o) === idx),
   }));
 
   return (
