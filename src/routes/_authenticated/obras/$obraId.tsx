@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Check, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -59,7 +60,7 @@ function DetalheObra() {
   const [editando, setEditando] = useState(false);
 
   const salvarObra = useMutation({
-    mutationFn: async (patch: Record<string, unknown>) => {
+    mutationFn: async (patch: TablesUpdate<"obras">) => {
       const { error } = await supabase.from("obras").update(patch).eq("id", obraId);
       if (error) throw error;
     },
