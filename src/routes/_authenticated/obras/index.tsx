@@ -103,6 +103,13 @@ function ObrasPage() {
             placeholder="Buscar obra..."
             className="flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-sm transition-all focus:border-primary focus:outline-none"
           />
+          <button
+            onClick={exportar}
+            disabled={!obras.length}
+            className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+          >
+            ↓ Baixar CSV
+          </button>
           {isAdmin && (
             <Link
               to="/obras/nova"
