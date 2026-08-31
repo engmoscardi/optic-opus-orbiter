@@ -407,6 +407,36 @@ function EditarObraForm({
           <input type="date" value={prazo} onChange={(e) => setPrazo(e.target.value)} className={campo} />
         </div>
       </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label className="label-tec">Regional</label>
+          <input value={regional} onChange={(e) => setRegional(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Contratada</label>
+          <input value={contratada} onChange={(e) => setContratada(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">ETP</label>
+          <input value={etp} onChange={(e) => setEtp(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">OP</label>
+          <input value={op} onChange={(e) => setOp(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Plano Ano</label>
+          <input type="number" min={2000} max={2100} value={planoAno} onChange={(e) => setPlanoAno(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="label-tec">Prioridade</label>
+          <input value={prioridade} onChange={(e) => setPrioridade(e.target.value)} className={campo} />
+        </div>
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="label-tec">Tipo da Obra</label>
+          <input value={tipoObra} onChange={(e) => setTipoObra(e.target.value)} className={campo} />
+        </div>
+      </div>
       <div className="space-y-1.5">
         <label className="label-tec">Responsável</label>
         <input value={responsavel} onChange={(e) => setResponsavel(e.target.value)} className={campo} />
@@ -428,6 +458,13 @@ function EditarObraForm({
               responsavel: responsavel.trim() || null,
               prazo: prazo || null,
               observacoes: observacoes.trim() || null,
+              regional: regional.trim() || null,
+              contratada: contratada.trim() || null,
+              etp: etp.trim() || null,
+              op: op.trim() || null,
+              plano_ano: planoAno ? Number(planoAno) : null,
+              prioridade: prioridade.trim() || null,
+              tipo_obra: tipoObra.trim() || null,
             })
           }
           className="flex-1 rounded-full bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-dark disabled:opacity-60"
