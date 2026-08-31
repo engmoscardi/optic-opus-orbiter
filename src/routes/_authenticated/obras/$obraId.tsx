@@ -186,7 +186,6 @@ function DetalheObra() {
                       </div>
                     ),
                 )}
-                {obra.responsavel && null}
                 {obra.observacoes && (
                   <div className="flex gap-1">
                     <dt className="font-semibold text-foreground">Observações:</dt>
@@ -362,6 +361,13 @@ function EditarObraForm({
   const [responsavel, setResponsavel] = useState(obra.responsavel ?? "");
   const [prazo, setPrazo] = useState(obra.prazo ?? "");
   const [observacoes, setObservacoes] = useState(obra.observacoes ?? "");
+  const [regional, setRegional] = useState(obra.regional ?? "");
+  const [contratada, setContratada] = useState(obra.contratada ?? "");
+  const [etp, setEtp] = useState(obra.etp ?? "");
+  const [op, setOp] = useState(obra.op ?? "");
+  const [planoAno, setPlanoAno] = useState(obra.plano_ano != null ? String(obra.plano_ano) : "");
+  const [prioridade, setPrioridade] = useState(obra.prioridade ?? "");
+  const [tipoObra, setTipoObra] = useState(obra.tipo_obra ?? "");
 
   const campo =
     "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none";
